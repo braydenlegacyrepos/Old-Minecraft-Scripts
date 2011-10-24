@@ -1,0 +1,8 @@
+# Minecraft directory with no trailing slash, e.g. /home/minecraft
+Minecraft_dir: /home/minecraft/smp
+# Directory of the folder that the backup function should backup
+Backup_source: /home/minecraft/server/world/
+# The folder that the backup function should backup to
+Backup_destination: /home/minecraft/backup/
+# Name of the screen session
+Screen_name: minecraft
