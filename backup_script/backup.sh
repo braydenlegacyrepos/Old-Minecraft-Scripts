@@ -5,7 +5,7 @@ SCREEN_NAME=`cat backup.conf | grep -w Screen-name: | awk '{print $2}'`
 ANNOUNCE_BACKUP=`cat backup.conf | grep -w Backup-Announce: | awk '{print $2}'`
 LOG=`cat backup.conf | grep -w Log-location: | awk '{print $2}'`
 BACKUP_TOOL=`cat backup.conf | grep -w Backup-program: | awk '{print $2}'`
-MENU_OPTIONS="Backup Restore Delete Quit"
+MENU_OPTIONS="Backup Restore Purge/Delete Quit"
 TIMESTAMP=`cat backup.conf | grep -w 'Timestamp-format:' | cut -d ' ' -f2`
 # Figure out what users have opted to use for timestamps
 select opt in $MENU_OPTIONS; do
