@@ -71,7 +71,7 @@ select opt in $MENU_OPTIONS; do
 			read RESTORE_TIME
 			printf "What directory do you want the backup to go to?\n"
 			read BACKUP_DESTINATION_DIR
-			rdiff-backup -r $RESTORE $DESTINATION_DIR $BACKUP_DESTINATION_DIR
+			rdiff-backup -r $RESTORE_TIME $DESTINATION_DIR $BACKUP_DESTINATION_DIR
 			printf "A backup should now be in $BACKUP_DESTINATION_DIR.\n"
 			exit 0
 		else
