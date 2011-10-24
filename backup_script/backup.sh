@@ -78,4 +78,12 @@ select opt in $MENU_OPTIONS; do
 			exit 0
 		fi
 		exit 0
+	elif [ "$opt" = "Purge/Delete" ]; then
+		if [ "$BACKUP_TOOL" = "rdiff-backup" ]; then
+			printf "How far back do you want files removed? e.g. removing files older than 1 week, 2 months, 7 days and 13 hours ago would work like 1W2M7D13h additional information at http://minecraft.donclurd.com/scripts/removeolder.html\n"
+			read DELETE_DATE
+			rdiff-backup --remove-older-than $DELETE_DATE $DESTINATION_DIR
+			printf "Attempted to remove the older diffs from your backup folder.\n"
+			exit 0
+		
 			
