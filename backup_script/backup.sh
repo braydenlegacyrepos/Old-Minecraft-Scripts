@@ -85,7 +85,7 @@ select opt in $MENU_OPTIONS; do
 			rdiff-backup --remove-older-than $DELETE_DATE $DESTINATION_DIR
 			printf "Attempted to remove the older diffs from your backup folder.\n"
 			exit 0
-		elif [ "$BACKUP_TOOL" = "tar"]; then
+		elif [ "$BACKUP_TOOL" = "tar" ]; then
 			printf "Specify how far back you want archives deleted in hours.\nHour:"
 			read DELETE_DATE
 			find $DESTINATION_DIR -name "*.bz2" -type f -Btime +$DELTE_DATE -delete
