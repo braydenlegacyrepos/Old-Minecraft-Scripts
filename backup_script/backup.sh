@@ -88,7 +88,7 @@ select opt in $MENU_OPTIONS; do
 		elif [ "$BACKUP_TOOL" = "tar" ]; then
 			printf "Specify how far back you want archives deleted in hours.\nHour:"
 			read DELETE_DATE
-			find $DESTINATION_DIR -name "*.bz2" -type f -Btime +$DELTE_DATE -delete
+			find $DESTINATION_DIR -name "*tar.gz" -type f -Btime +$DELTE_DATE -delete
 			printf "Attempted to remove all .tar.gz files that are older than $DELTE_DATE hours in $DESTINATION_DIR.\n"
 		else
 			printf "Backup-program: is incorrectly set, set to either rdiff-backup or tar for this script to work properly.\n"
@@ -97,5 +97,3 @@ select opt in $MENU_OPTIONS; do
 		exit 0
 	fi
 done
-		
-			
