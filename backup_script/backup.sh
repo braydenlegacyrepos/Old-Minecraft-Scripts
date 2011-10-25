@@ -85,5 +85,17 @@ select opt in $MENU_OPTIONS; do
 			rdiff-backup --remove-older-than $DELETE_DATE $DESTINATION_DIR
 			printf "Attempted to remove the older diffs from your backup folder.\n"
 			exit 0
+		elif [ "$BACKUP_TOOL" = "tar"]; then
+			printf "Specify how far back you want archives deleted in hours.\nHour:"
+			read DELETE_DATE
+			find $DESTINATION_DIR -name "*.bz2" -type f -Btime +$DELTE_DATE -delete
+			printf "Attempted to remove all .tar.gz files that are older than $DELTE_DATE hours in $DESTINATION_DIR.\n"
+		else
+			printf "Backup-program: is incorrectly set, set to either rdiff-backup or tar for this script to work properly.\n"
+			exit 0
+	elif [ "$opt" = "Quit" ]; then
+		exit 0
+	fi
+done
 		
 			
