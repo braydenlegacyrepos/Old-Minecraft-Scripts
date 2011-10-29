@@ -112,12 +112,12 @@ select opt in $MENU_OPTIONS; do
 						sleep 0.5
 						printf "Making temporary directory.\n"
 						mkdir ~/essentials_tmp/
-						printf "Downloading WorldEdit.\n"
+						printf "Downloading Essentials.\n"
 						wget --output-document=~/essentials_tmp/essentials.zip http://tiny.cc/EssentialsZipDownload
-						printf "Unpacking WorldEdit to the temporary folder.\n"
-						unzip ~/worldedit_tmp/worldedit.zip > /dev/null
+						printf "Unpacking Essentials to the temporary folder.\n"
+						unzip ~/essentials_tmp/essentials.zip > /dev/null
 						printf "Copying Essentials.jar and the rest into the server's plugins directory.\n"
-						cp ~/worldedit_tmp/*.jar $MC_DIR/plugins/
+						cp ~/essentials_tmp/*.jar $MC_DIR/plugins/
 						printf "Cleaning up the temporary directory.\n"
 						rm -r ~/essentials_tmp/
 						printf "Do you want to reload the server to attempt to upgrade now? Please answer 'Y' or 'N'.\nReload:"
