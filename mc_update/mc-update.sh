@@ -11,7 +11,7 @@ select opt in $MENU_OPTIONS; do
 				LOG_LINES=`cat $MC_DIR/server.log | grep 'WorldGuard' | grep 'enabled.' | wc -l`
 				SERVER_VERSION=`cat $MC_DIR/server.log | grep 'WorldGuard' | grep 'enabled.' | sed -n ${LOG_LINES}p | awk '{printf $5}'`
 					if [ "$SERVER_VERSION" = "$WEBSITE_VERSION" ]; then
-						printf "It appears your WorldGuard version, $SERVER_VERSION, is up to date with the response from the website, $WEBSITE_VERSIon.\n"
+						printf "It appears your WorldGuard version, $SERVER_VERSION, is up to date with the response from the website, $WEBSITE_VERSION.\n"
 					elif [ "$SERVER_VERSION" != "$WEBSITE_VERSION" ]; then
 						printf "Your version is out of date, latest version $WEBSITE_VERSION and your version $SERVER_VERSION.\n"
 						printf "If anything but two version numbers came out (e.g. asdf instead of 4.7) then interrupt the script via CTRL+C and attempt again.\n"
@@ -200,4 +200,46 @@ select opt in $MENU_OPTIONS; do
 				printf "Something went wrong and the script did not understand your input. Please try again.\n"
 			fi
 		done
-	
+	if [ "$opt" = "Check" ]; then
+		CHECK_OPTIONS="WorldGuard WorldEdit Essentials"
+		select check_opt in $CHECK_OPTIONS; do
+			if [ "$check_opt" = "WorldGuard" ]; then
+				printf "Checking if WorldGuard is the latest version.\n"
+				WEBSITE_VERSION=`lynx -dump http://dev.bukkit.org/server-mods/worldguard/ | \grep 'R:' | awk '{printf $4}'`
+				LOG_LINES=`cat $MC_DIR/server.log | grep 'WorldGuard' | grep 'enabled.' | wc -l`
+				SERVER_VERSION=`cat $MC_DIR/server.log | grep 'WorldGuard' | grep 'enabled.' | sed -n ${LOG_LINES}p | awk '{printf $5}'`
+				if [ "$SERVER_VERSION" = "$WEBSITE_VERSION" ]; then
+					printf "It appears your WorldGuard version, $SERVER_VERSION, is up to date with the response from the website, $WEBSITE_VERSION.\n"
+				elif [ "$SERVER_VERSION" != "$WEBSITE_VERSION" ]; then
+					printf "Your version is out of date, latest version $WEBSITE_VERSION and your version $SERVER_VERSION.\n"
+				else
+					printf "Something unexpected happened.\n"
+				fi
+			elif [ "$check_opt" = "WorldEdit" ]; then
+				WEBSITE_VERSION=`lynx -dump http://dev.bukkit.org/server-mods/worldedit/ | \grep 'R:' | sed -n 1p | awk '{printf $4}'`
+				LOG_LINES=`cat $MC_DIR/server.log | grep 'WorldEdit' | grep 'enabled.' | wc -l`
+				SERVER_VERSION=`cat $MC_DIR/server.log | grep 'WorldEdit' | grep 'enabled.' | sed -n ${LOG_LINES}p | awk '{printf $5}'`
+				if [ "$SERVER_VERSION" = "$WEBSITE_VERSION" ]; then
+					printf "It appears your WorldEdit version, $SERVER_VERSION, is up to date with the latest version, $WEBSITE_VERSION.\n"
+				elif [ "$SERVERP_VERSION" != "$WEBSITE_VERSION" ]; then
+					printf "It seems your WorldEdit installation is out of date. Current: $SERVER_VERSION New: $WEBSITE_VERSION\n"
+				else
+					printf "Something unexpected happened.\n"
+				fi
+			elif [ "$check_opt" = "Essentials" ]; then
+				WEBSITE_VERSION=`lynx -dump http://dev.bukkit.org/server-mods/essentials/ | \grep 'R:' | sed -n 1p | awk '{printf $3}' | cut -c16-`
+				LOG_LINES=`cat server.log | grep 'Loaded Essentials build' | wc -l`
+				SERVER_VERSION=`cat $MC_DIR/server.log | grep 'Loaded Essentials build' | sed -n ${LOG_LINES}p | awk '{printf $7}'`
+					if [ "$SERVER_VERSION" = "$WEBSITE_VERSION" ]; then
+						printf "It appears your Essentials version, $SERVER_VERSION, is up to date with the latest version, $WEBSITE_VERSION.\n"
+					elif [ "$SERVERP_VERSION" != "$WEBSITE_VERSION" ]; then
+						printf "It seems your Essentials installation is out of date. Current: $SERVER_VERSION New: $WEBSITE_VERSION\n"
+					else
+						printf "Something unexpected happened.\n"
+					fi
+			else
+				printf "Please select an option.\n"
+			fi
+		done
+	fi
+done
