@@ -54,7 +54,7 @@ select opt in $MENU_OPTIONS; do
 				SERVER_VERSION=`cat $MC_DIR/server.log | grep 'WorldEdit' | grep 'enabled.' | sed -n ${LOG_LINES}p | awk '{printf $5}'`
 					if [ "$SERVER_VERSION" = "$WEBSITE_VERSION" ]; then
 						printf "It appears your WorldEdit version, $SERVER_VERSION, is up to date with the latest version, $WEBSITE_VERSION.\n"
-					elif [ "$SERVERP_VERSION" != "$WEBSITE_VERSION" ]; then
+					elif [ "$SERVER_VERSION" != "$WEBSITE_VERSION" ]; then
 						printf "It seems your WorldEdit installation is out of date. Current: $SERVER_VERSION New: $WEBSITE_VERSION\n"
 						printf "If anything but two version numbers came out (e.g. asdf instead of 4.7) then interrupt the script via CTRL+C and attempt again.\n"
 						sleep 0.5
@@ -101,12 +101,12 @@ select opt in $MENU_OPTIONS; do
 						exit 0
 					fi
 			elif [ "$update_opt" = "Essentials" ]; then
-				WEBSITE_VERSION=`lynx -dump http://dev.bukkit.org/server-mods/essentials/ | \grep 'R:' | sed -n 1p | awk '{printf $3}' | cut -c16-`
+				WEBSITE_VERSION=`lynx -dump http://ci.earth2me.net/guestAuth/app/rest/buildTypes/id:bt22/builds/status:SUCCESS/number`
 				LOG_LINES=`cat server.log | grep 'Loaded Essentials build' | wc -l`
 				SERVER_VERSION=`cat $MC_DIR/server.log | grep 'Loaded Essentials build' | sed -n ${LOG_LINES}p | awk '{printf $7}'`
-				if [ "$SERVER_VERSION" = "$WEBSITE_VERSION" ]; then
+					if [ "$SERVER_VERSION" = "$WEBSITE_VERSION" ]; then
 						printf "It appears your Essentials version, $SERVER_VERSION, is up to date with the latest version, $WEBSITE_VERSION.\n"
-					elif [ "$SERVERP_VERSION" != "$WEBSITE_VERSION" ]; then
+					elif [ "$SERVER_VERSION" != "$WEBSITE_VERSION" ]; then
 						printf "It seems your Essentials installation is out of date. Current: $SERVER_VERSION New: $WEBSITE_VERSION\n"
 						printf "If anything but two version numbers came out (e.g. asdf instead of 2.6.4) then interrupt the script via CTRL+C and attempt again.\n"
 						sleep 0.5
@@ -221,18 +221,18 @@ select opt in $MENU_OPTIONS; do
 				SERVER_VERSION=`cat $MC_DIR/server.log | grep 'WorldEdit' | grep 'enabled.' | sed -n ${LOG_LINES}p | awk '{printf $5}'`
 				if [ "$SERVER_VERSION" = "$WEBSITE_VERSION" ]; then
 					printf "It appears your WorldEdit version, $SERVER_VERSION, is up to date with the latest version, $WEBSITE_VERSION.\n"
-				elif [ "$SERVERP_VERSION" != "$WEBSITE_VERSION" ]; then
+				elif [ "$SERVER_VERSION" != "$WEBSITE_VERSION" ]; then
 					printf "It seems your WorldEdit installation is out of date. Current: $SERVER_VERSION New: $WEBSITE_VERSION\n"
 				else
 					printf "Something unexpected happened.\n"
 				fi
 			elif [ "$check_opt" = "Essentials" ]; then
-				WEBSITE_VERSION=`lynx -dump http://dev.bukkit.org/server-mods/essentials/ | \grep 'R:' | sed -n 1p | awk '{printf $3}' | cut -c16-`
+				WEBSITE_VERSION=`lynx -dump http://ci.earth2me.net/guestAuth/app/rest/buildTypes/id:bt22/builds/status:SUCCESS/number`
 				LOG_LINES=`cat server.log | grep 'Loaded Essentials build' | wc -l`
 				SERVER_VERSION=`cat $MC_DIR/server.log | grep 'Loaded Essentials build' | sed -n ${LOG_LINES}p | awk '{printf $7}'`
 					if [ "$SERVER_VERSION" = "$WEBSITE_VERSION" ]; then
 						printf "It appears your Essentials version, $SERVER_VERSION, is up to date with the latest version, $WEBSITE_VERSION.\n"
-					elif [ "$SERVERP_VERSION" != "$WEBSITE_VERSION" ]; then
+					elif [ "$SERVER_VERSION" != "$WEBSITE_VERSION" ]; then
 						printf "It seems your Essentials installation is out of date. Current: $SERVER_VERSION New: $WEBSITE_VERSION\n"
 					else
 						printf "Something unexpected happened.\n"
