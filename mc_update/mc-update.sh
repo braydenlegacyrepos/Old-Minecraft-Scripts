@@ -2,15 +2,12 @@
 MC_DIR=`cat mc-update.conf | grep -w 'Minecraft_dir:' | awk '{printf $2}'`
 SCREEN_NAME=`cat mc-update.conf | grep -w 'Screen_name:' | awk '{printf $2}'`
 MENU_OPTIONS="Update Remove Check"
-function update {
-if [ "$update_opt" = "WorldGuard" ]; then
-	
 select opt in $MENU_OPTIONS; do
 	if [ "$opt" = "Update" ]; then
 		UPDATE_OPTIONS="WorldGuard WorldEdit Essentials"
 		select update_opt in $UPDATE_OPTIONS; do
 			if [ "$update_opt" = "WorldGuard" ]; then
-				WEBSITE_VERSION=`lynx -dump http://dev.bukkit.org/server-mods/worldguard/ | \grep 'R:' | awk '{printf $4}'`
+				WEBSITE_VERSION=`lynx -dump http://irc.donclurd.com/worldguard-version.txt`
 				LOG_LINES=`cat $MC_DIR/server.log | grep 'WorldGuard' | grep 'enabled.' | wc -l`
 				SERVER_VERSION=`cat $MC_DIR/server.log | grep 'WorldGuard' | grep 'enabled.' | sed -n ${LOG_LINES}p | awk '{printf $5}'`
 					if [ "$SERVER_VERSION" = "$WEBSITE_VERSION" ]; then
@@ -21,14 +18,11 @@ select opt in $MENU_OPTIONS; do
 						sleep 3
 						printf "The script will now attempt to intelligently determine the links to download. The way the links are formatted is such that they change from version to version.\n"
 						printf "This ensures the script works when a new version comes out. (As it should!)\n"
-						STEP_1=`curl http://dev.bukkit.org/server-mods/worldguard/ | ./list_urls.sed | grep -w 'files/1-world-guard' | sed -n 2p`
-						URL="dev.bukkit.org$STEP_1"
-						printf "Using $URL.\n"
-						STEP_2=`curl $URL | ./list_urls.sed | grep -w 'worldguard' | grep -w 'files' | sed -n 2p`
 						printf "Making temporary directory.\n"
 						mkdir worldguard_tmp/
 						printf "Downloading WorldGuard.\n"
-						wget --output-document=worldguard_tmp/worldguard.zip $STEP_2
+						URL=`lynx -dump http://irc.donclurd.com/worldguard-download.txt`
+						wget --output-document=worldguard_tmp/worldguard.zip $URL
 						printf "Unpacking WorldGuard to the temporary folder.\n"
 						unzip worldguard_tmp/worldguard.zip -d worldguard_tmp/ > /dev/null
 						printf "Copying WorldGuard.jar into the server's plugins directory.\n"
@@ -55,7 +49,7 @@ select opt in $MENU_OPTIONS; do
 						exit 0
 					fi
 			elif [ "$update_opt" = "WorldEdit" ]; then
-				WEBSITE_VERSION=`lynx -dump http://dev.bukkit.org/server-mods/worldedit/ | \grep 'R:' | sed -n 1p | awk '{printf $4}'`
+				WEBSITE_VERSION=`lynx -dump http://irc.donclurd.com/worldedit-version.txt`
 				LOG_LINES=`cat $MC_DIR/server.log | grep 'WorldEdit' | grep 'enabled.' | wc -l`
 				SERVER_VERSION=`cat $MC_DIR/server.log | grep 'WorldEdit' | grep 'enabled.' | sed -n ${LOG_LINES}p | awk '{printf $5}'`
 					if [ "$SERVER_VERSION" = "$WEBSITE_VERSION" ]; then
@@ -66,13 +60,11 @@ select opt in $MENU_OPTIONS; do
 						sleep 0.5
 						printf "The script will now attempt to 'intelligently' determine the links to download. The way the links are formatted is such that they change from version to version.\n"
 						printf "This ensures the script works when a new version comes out. (As it should!)\n"
-						STEP_1=`curl http://dev.bukkit.org/server-mods/worldedit/ | ./list_urls.sed | grep -w 'files/1-world-edit'`
-						URL="http://dev.bukkit.org$STEP_1"
-						STEP_2=`curl $URL | ./list_urls.sed | grep -w 'worldedit' | grep -w 'files' | sed -n 2p`
+						URL=`lynx -dump http://irc.donclurd.com/worldedit-download.txt`
 						printf "Making temporary directory.\n"
 						mkdir worldedit_tmp/
 						printf "Downloading WorldEdit.\n"
-						wget --output-document=worldedit_tmp/worldedit.zip $STEP_2
+						wget --output-document=worldedit_tmp/worldedit.zip $URL
 						printf "Unpacking WorldEdit to the temporary folder.\n"
 						unzip worldedit_tmp/worldedit.zip -d worldedit_tmp/ > /dev/null
 						printf "Copying WorldEdit.jar into the server's plugins directory.\n"
@@ -213,7 +205,7 @@ select opt in $MENU_OPTIONS; do
 		select check_opt in $CHECK_OPTIONS; do
 			if [ "$check_opt" = "WorldGuard" ]; then
 				printf "Checking if WorldGuard is the latest version.\n"
-				WEBSITE_VERSION=`lynx -dump http://dev.bukkit.org/server-mods/worldguard/ | \grep 'R:' | awk '{printf $4}'`
+				WEBSITE_VERSION=`lynx -dump http://irc.donclurd.com/worldguard-version.txt`
 				LOG_LINES=`cat $MC_DIR/server.log | grep 'WorldGuard' | grep 'enabled.' | wc -l`
 				SERVER_VERSION=`cat $MC_DIR/server.log | grep 'WorldGuard' | grep 'enabled.' | sed -n ${LOG_LINES}p | awk '{printf $5}'`
 				if [ "$SERVER_VERSION" = "$WEBSITE_VERSION" ]; then
@@ -224,7 +216,7 @@ select opt in $MENU_OPTIONS; do
 					printf "Something unexpected happened.\n"
 				fi
 			elif [ "$check_opt" = "WorldEdit" ]; then
-				WEBSITE_VERSION=`lynx -dump http://dev.bukkit.org/server-mods/worldedit/ | \grep 'R:' | sed -n 1p | awk '{printf $4}'`
+				WEBSITE_VERSION=`lynx -dump http://irc.donclurd.com/worldedit-version.txt`
 				LOG_LINES=`cat $MC_DIR/server.log | grep 'WorldEdit' | grep 'enabled.' | wc -l`
 				SERVER_VERSION=`cat $MC_DIR/server.log | grep 'WorldEdit' | grep 'enabled.' | sed -n ${LOG_LINES}p | awk '{printf $5}'`
 				if [ "$SERVER_VERSION" = "$WEBSITE_VERSION" ]; then
