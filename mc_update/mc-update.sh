@@ -2,6 +2,9 @@
 MC_DIR=`cat mc-update.conf | grep -w 'Minecraft_dir:' | awk '{printf $2}'`
 SCREEN_NAME=`cat mc-update.conf | grep -w 'Screen_name:' | awk '{printf $2}'`
 MENU_OPTIONS="Update Remove Check"
+function update {
+if [ "$update_opt" = "WorldGuard" ]; then
+	
 select opt in $MENU_OPTIONS; do
 	if [ "$opt" = "Update" ]; then
 		UPDATE_OPTIONS="WorldGuard WorldEdit Essentials"
@@ -106,7 +109,7 @@ select opt in $MENU_OPTIONS; do
 						exit 0
 					fi
 			elif [ "$update_opt" = "Essentials" ]; then
-				WEBSITE_VERSION=`lynx -dump http://ci.earth2me.net/guestAuth/app/rest/buildTypes/id:bt22/builds/status:SUCCESS/number`
+				WEBSITE_VERSION=`lynx -dump http://irc.donclurd.com/essentials.txt`
 				LOG_LINES=`cat server.log | grep 'Loaded Essentials build' | wc -l`
 				SERVER_VERSION=`cat $MC_DIR/server.log | grep 'Loaded Essentials build' | sed -n ${LOG_LINES}p | awk '{printf $7}'`
 					if [ "$SERVER_VERSION" = "$WEBSITE_VERSION" ]; then
@@ -232,7 +235,7 @@ select opt in $MENU_OPTIONS; do
 					printf "Something unexpected happened.\n"
 				fi
 			elif [ "$check_opt" = "Essentials" ]; then
-				WEBSITE_VERSION=`lynx -dump http://ci.earth2me.net/guestAuth/app/rest/buildTypes/id:bt22/builds/status:SUCCESS/number`
+				WEBSITE_VERSION=`lynx -dump http://irc.donclurd.com/essentials.txt`
 				LOG_LINES=`cat server.log | grep 'Loaded Essentials build' | wc -l`
 				SERVER_VERSION=`cat $MC_DIR/server.log | grep 'Loaded Essentials build' | sed -n ${LOG_LINES}p | awk '{printf $7}'`
 					if [ "$SERVER_VERSION" = "$WEBSITE_VERSION" ]; then
