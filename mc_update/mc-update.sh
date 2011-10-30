@@ -15,27 +15,30 @@ select opt in $MENU_OPTIONS; do
 					elif [ "$SERVER_VERSION" != "$WEBSITE_VERSION" ]; then
 						printf "Your version is out of date, latest version $WEBSITE_VERSION and your version $SERVER_VERSION.\n"
 						printf "If anything but two version numbers came out (e.g. asdf instead of 4.7) then interrupt the script via CTRL+C and attempt again.\n"
-						sleep 0.5
+						sleep 3
 						printf "The script will now attempt to intelligently determine the links to download. The way the links are formatted is such that they change from version to version.\n"
 						printf "This ensures the script works when a new version comes out. (As it should!)\n"
-						STEP_1=`curl http://dev.bukkit.org/server-mods/worldguard/ | ./list_urls.sed | grep -w 'files/1-world-guard'`
-						STEP_2=`curl http://dev.bukkit.org${STEP_1} | ./list_urls.sed | grep -w 'worldguard' | grep -w 'files' | sed -n 2p`
+						STEP_1=`curl http://dev.bukkit.org/server-mods/worldguard/ | ./list_urls.sed | grep -w 'files/1-world-guard' | sed -n 2p`
+						URL="dev.bukkit.org$STEP_1"
+						printf "Using $URL.\n"
+						STEP_2=`curl $URL | ./list_urls.sed | grep -w 'worldguard' | grep -w 'files' | sed -n 2p`
 						printf "Making temporary directory.\n"
-						mkdir ~/worldguard_tmp/
+						mkdir worldguard_tmp/
 						printf "Downloading WorldGuard.\n"
-						wget --output-document=~/worldguard_tmp/worldguard.zip $STEP_2
+						wget --output-document=worldguard_tmp/worldguard.zip $STEP_2
 						printf "Unpacking WorldGuard to the temporary folder.\n"
-						unzip ~/worldguard_tmp/worldguard.zip > /dev/null
+						unzip worldguard_tmp/worldguard.zip -d worldguard_tmp/ > /dev/null
 						printf "Copying WorldGuard.jar into the server's plugins directory.\n"
-						cp ~/worldguard_tmp/WorldGuard.jar $MC_DIR/plugins/WorldGuard.jar
+						cp worldguard_tmp/WorldGuard.jar $MC_DIR/plugins/WorldGuard.jar
+						rm $MC_DIR/plugins/worldguard*
 						printf "Cleaning up the temporary directory.\n"
-						rm -r ~/worldguard_tmp/
-						printf "Do you want to reload the server to attempt to upgrade now? Please answer T or N.\nReload:"
+						rm -r worldguard_tmp/
+						printf "Do you want to reload the server to attempt to upgrade now? Please answer Y or N.\nReload:"
 						read ANSWER
-						if [ "$ANSWER" = "Y" || "$ANSWER" = "y" ]; then
+						if [ "$ANSWER" = "Y" ] || [ "$ANSWER" = "y" ]; then
 							screen -p 0 -S $SCREEN_NAME -X stuff "`printf "reload\r"`"
 							printf "Attempted to reload the server, check the console to see how that worked out.\n"
-						elif [ "$ANSWER" = "N" || "$ANSWER" = "n" ]; then
+						elif [ "$ANSWER" = "N" ] || [ "$ANSWER" = "n" ]; then
 							printf "You opted not to reload.\n"
 						else
 							printf "The script did not understand what you wrote.\n"
@@ -61,34 +64,36 @@ select opt in $MENU_OPTIONS; do
 						printf "The script will now attempt to 'intelligently' determine the links to download. The way the links are formatted is such that they change from version to version.\n"
 						printf "This ensures the script works when a new version comes out. (As it should!)\n"
 						STEP_1=`curl http://dev.bukkit.org/server-mods/worldedit/ | ./list_urls.sed | grep -w 'files/1-world-edit'`
-						STEP_2=`curl http://dev.bukkit.org${STEP1} | ./list_urls.sed | grep -w 'worldedit' | grep -w 'files' | sed -n 2p`
+						URL="http://dev.bukkit.org$STEP_1"
+						STEP_2=`curl $URL | ./list_urls.sed | grep -w 'worldedit' | grep -w 'files' | sed -n 2p`
 						printf "Making temporary directory.\n"
-						mkdir ~/worldedit_tmp/
+						mkdir worldedit_tmp/
 						printf "Downloading WorldEdit.\n"
-						wget --output-document=~/worldedit_tmp/worldedit.zip $STEP_2
+						wget --output-document=worldedit_tmp/worldedit.zip $STEP_2
 						printf "Unpacking WorldEdit to the temporary folder.\n"
-						unzip ~/worldedit_tmp/worldedit.zip > /dev/null
+						unzip worldedit_tmp/worldedit.zip -d worldedit_tmp/ > /dev/null
 						printf "Copying WorldEdit.jar into the server's plugins directory.\n"
-						cp ~/worldedit_tmp/WorldEdit.jar $MC_DIR/plugins/WorldEdit.jar
+						cp worldedit_tmp/WorldEdit.jar $MC_DIR/plugins/WorldEdit.jar
+						rm $MC_DIR/plugins/worldedit*
 						printf "WorldEdit also has this thing called craftscripts, they're cool things that can automate certain tasks such as creation of pixel art and roofs.\n"
 						printf "Do you want the latest craftscripts to be installed? Y or N\nPrompt:"
 						read CRAFTSCRIPT_ANSWER
-						if [ "$CRAFTSCRIPT_ANSWER" = "Y" || "$CRAFTSCRIPT_ANSWER" = "y" ]; then
-							cp -r ~/worldedit_tmp/craftscripts/ $MC_DIR/
+						if [ "$CRAFTSCRIPT_ANSWER" = "Y" ] || [ "$CRAFTSCRIPT_ANSWER" = "y" ]; then
+							cp -r worldedit_tmp/craftscripts/ $MC_DIR/
 							printf "Attempted to copy the craftscripts in.\n"
-						elif [ "$CRAFTSCRIPT_ANSWER" = "N" || "$CRAFTSCRIPT_ANSWER" = "n" ]; then
+						elif [ "$CRAFTSCRIPT_ANSWER" = "N" ] || [ "$CRAFTSCRIPT_ANSWER" = "n" ]; then
 							printf "You opted not to copy the craftscripts in.\n"
 						else
 							printf "We did not understand what you wrote but will assume no.\n"
 						fi
 						printf "Cleaning up the temporary directory.\n"
-						rm -r ~/worldedit_tmp/
+						rm -r worldedit_tmp/
 						printf "Do you want to reload the server to attempt to upgrade now? Please answer Y or N.\nReload:"
 						read ANSWER
-						if [ "$ANSWER" = "Y" || "$ANSWER" = "y" ]; then
+						if [ "$ANSWER" = "Y" ] || [ "$ANSWER" = "y" ]; then
 							screen -p 0 -S $SCREEN_NAME -X stuff "`printf "reload\r"`"
 							printf "Attempted to reload the server, check the console to see how that worked out.\n"
-						elif [ "$ANSWER" = "N" || "$ANSWER" = "n" ]; then
+						elif [ "$ANSWER" = "N" ] || [ "$ANSWER" = "n" ]; then
 							printf "You opted not to reload.\n"
 						else
 							printf "The script did not understand what you wrote. But we will assume you meant no.\n"
