@@ -76,7 +76,7 @@ select opt in $MENU_OPTIONS; do
 						if [ "$CRAFTSCRIPT_ANSWER" = "Y" || "$CRAFTSCRIPT_ANSWER" = "y" ]; then
 							cp -r ~/worldedit_tmp/craftscripts/ $MC_DIR/
 							printf "Attempted to copy the craftscripts in.\n"
-						if [ "$CRAFTSCRIPT_ANSWER" = "N" || "$CRAFTSCRIPT_ANSWER" = "n" ]; then
+						elif [ "$CRAFTSCRIPT_ANSWER" = "N" || "$CRAFTSCRIPT_ANSWER" = "n" ]; then
 							printf "You opted not to copy the craftscripts in.\n"
 						else
 							printf "We did not understand what you wrote but will assume no.\n"
@@ -141,7 +141,7 @@ select opt in $MENU_OPTIONS; do
 				printf "Please select an option.\n"
 			fi
 		done
-	if [ "$opt" = "Remove" ]; then
+	elif [ "$opt" = "Remove" ]; then
 		REMOVE_OPTIONS="WorldGuard WorldEdit Essentials"
 		select remove_opt in $REMOVE_OPTIONS; do
 			if [ "$remove_opt" = "WorldGuard" ]; then
@@ -200,7 +200,7 @@ select opt in $MENU_OPTIONS; do
 				printf "Something went wrong and the script did not understand your input. Please try again.\n"
 			fi
 		done
-	if [ "$opt" = "Check" ]; then
+	elif [ "$opt" = "Check" ]; then
 		CHECK_OPTIONS="WorldGuard WorldEdit Essentials"
 		select check_opt in $CHECK_OPTIONS; do
 			if [ "$check_opt" = "WorldGuard" ]; then
