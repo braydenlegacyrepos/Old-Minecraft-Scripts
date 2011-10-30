@@ -16,7 +16,7 @@ select opt in $MENU_OPTIONS; do
 						printf "Your version is out of date, latest version $WEBSITE_VERSION and your version $SERVER_VERSION.\n"
 						printf "If anything but two version numbers came out (e.g. asdf instead of 4.7) then interrupt the script via CTRL+C and attempt again.\n"
 						sleep 0.5
-						printf "The script will now attempt to 'intelligently' determine the links to download. The way the links are formatted is such that they change from version to version.\n"
+						printf "The script will now attempt to intelligently determine the links to download. The way the links are formatted is such that they change from version to version.\n"
 						printf "This ensures the script works when a new version comes out. (As it should!)\n"
 						STEP_1=`curl http://dev.bukkit.org/server-mods/worldguard/ | ./list_urls.sed | grep -w 'files/1-world-guard'`
 						STEP_2=`curl http://dev.bukkit.org${STEP_1} | ./list_urls.sed | grep -w 'worldguard' | grep -w 'files' | sed -n 2p`
@@ -30,7 +30,7 @@ select opt in $MENU_OPTIONS; do
 						cp ~/worldguard_tmp/WorldGuard.jar $MC_DIR/plugins/WorldGuard.jar
 						printf "Cleaning up the temporary directory.\n"
 						rm -r ~/worldguard_tmp/
-						printf "Do you want to reload the server to attempt to upgrade now? Please answer 'Y' or 'N'.\nReload:"
+						printf "Do you want to reload the server to attempt to upgrade now? Please answer T or N.\nReload:"
 						read ANSWER
 						if [ "$ANSWER" = "Y" || "$ANSWER" = "y" ]; then
 							screen -p 0 -S $SCREEN_NAME -X stuff "`printf "reload\r"`"
@@ -39,7 +39,7 @@ select opt in $MENU_OPTIONS; do
 							printf "You opted not to reload.\n"
 						else
 							printf "The script did not understand what you wrote.\n"
-							printf "But we will assume you meant 'no'.\n"
+							printf "But we will assume you meant no.\n"
 						fi
 					else
 						printf "Something really weird happened. The script will proceed to dump some information to help debug.\n"
@@ -83,7 +83,7 @@ select opt in $MENU_OPTIONS; do
 						fi
 						printf "Cleaning up the temporary directory.\n"
 						rm -r ~/worldedit_tmp/
-						printf "Do you want to reload the server to attempt to upgrade now? Please answer 'Y' or 'N'.\nReload:"
+						printf "Do you want to reload the server to attempt to upgrade now? Please answer Y or N.\nReload:"
 						read ANSWER
 						if [ "$ANSWER" = "Y" || "$ANSWER" = "y" ]; then
 							screen -p 0 -S $SCREEN_NAME -X stuff "`printf "reload\r"`"
@@ -91,7 +91,7 @@ select opt in $MENU_OPTIONS; do
 						elif [ "$ANSWER" = "N" || "$ANSWER" = "n" ]; then
 							printf "You opted not to reload.\n"
 						else
-							printf "The script did not understand what you wrote. But we will assume you meant 'no'.\n"
+							printf "The script did not understand what you wrote. But we will assume you meant no.\n"
 						fi
 					else
 						printf "Something really weird happened. The script will proceed to dump some information to help debug.\n"
@@ -120,7 +120,7 @@ select opt in $MENU_OPTIONS; do
 						cp ~/essentials_tmp/*.jar $MC_DIR/plugins/
 						printf "Cleaning up the temporary directory.\n"
 						rm -r ~/essentials_tmp/
-						printf "Do you want to reload the server to attempt to upgrade now? Please answer 'Y' or 'N'.\nReload:"
+						printf "Do you want to reload the server to attempt to upgrade now? Please answer Y or N.\nReload:"
 						read ANSWER
 						if [ "$ANSWER" = "Y" || "$ANSWER" = "y" ]; then
 							screen -p 0 -S $SCREEN_NAME -X stuff "`printf "reload\r"`"
@@ -128,7 +128,7 @@ select opt in $MENU_OPTIONS; do
 						elif [ "$ANSWER" = "N" || "$ANSWER" = "n" ]; then
 							printf "You opted not to reload.\n"
 						else
-							printf "The script did not understand what you wrote. But we will assume you meant 'no'.\n"
+							printf "The script did not understand what you wrote. But we will assume you meant no.\n"
 						fi
 					else
 						printf "Something really weird happened. The script will proceed to dump some information to help debug.\n"
@@ -138,7 +138,7 @@ select opt in $MENU_OPTIONS; do
 						exit 0
 					fi
 			else
-				printf "Something went wrong and I didn't understand your request. Please try again.\n"
+				printf "Please select an option.\n"
 			fi
 		done
 	if [ "$opt" = "Remove" ]; then
@@ -157,7 +157,7 @@ select opt in $MENU_OPTIONS; do
 					screen -p 0 -S $SCREEN_NAME -X stuff "`printf "reload\r"`"
 					printf "Attempted to reload the server, check the console to see how that worked out.\n"
 				elif [ "$ANSWER" = "N" || "$ANSWER" = "n" ]; then
-							printf "You opted not to reload.\n"
+					printf "You opted not to reload.\n"
 				else
 					printf "The script did not understand what you wrote. But we will assume you meant 'no'.\n"
 				fi
@@ -175,7 +175,7 @@ select opt in $MENU_OPTIONS; do
 					screen -p 0 -S $SCREEN_NAME -X stuff "`printf "reload\r"`"
 					printf "Attempted to reload the server, check the console to see how that worked out.\n"
 				elif [ "$ANSWER" = "N" || "$ANSWER" = "n" ]; then
-							printf "You opted not to reload.\n"
+					printf "You opted not to reload.\n"
 				else
 					printf "The script did not understand what you wrote. But we will assume you meant 'no'.\n"
 				fi
@@ -192,7 +192,7 @@ select opt in $MENU_OPTIONS; do
 					screen -p 0 -S $SCREEN_NAME -X stuff "`printf "reload\r"`"
 					printf "Attempted to reload the server, check the console to see how that worked out.\n"
 				elif [ "$ANSWER" = "N" || "$ANSWER" = "n" ]; then
-							printf "You opted not to reload.\n"
+					printf "You opted not to reload.\n"
 				else
 					printf "The script did not understand what you wrote. But we will assume you meant 'no'.\n"
 				fi
