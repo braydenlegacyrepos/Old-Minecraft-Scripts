@@ -1,35 +1,80 @@
 #!/bin/bash
 MC_DIR=`cat mc-update.conf | grep -w 'Minecraft_dir:' | awk '{printf $2}'`
 SCREEN_NAME=`cat mc-update.conf | grep -w 'Screen_name:' | awk '{printf $2}'`
+function do_update {
+if [ "$update_opt" = "WorldGuard" ]; then
+	printf "Making temporary directory.\n"
+	mkdir ${update_opt}_tmp/
+	printf "Downloading ${update_opt}.\n"
+	URL=`lynx -dump http://irc.donclurd.com/${update_opt}.txt`
+	wget --output-document=${update_opt}_tmp/${update_opt}.zip $URL
+	printf "Unpacking ${update_opt} to the temporary folder.\n"
+	unzip ${update_opt}_tmp/${update_opt}.zip -d ${update_opt}_tmp/ > /dev/null
+	printf "Copying ${update_opt}.jar into the server's plugins directory.\n"
+	cp ${update_opt}_tmp/*.jar $MC_DIR/plugins/
+	rm $MC_DIR/plugins/worldguard*
+	printf "Cleaning up the temporary directory.\n"
+	rm -r ${update_opt}_tmp/
+elif [ "$update_opt" = "WorldEdit" ]; then
+	printf "Making temporary directory.\n"
+	mkdir ${update_opt}_tmp/
+	printf "Downloading ${update_opt}.\n"
+	URL=`lynx -dump http://irc.donclurd.com/${update_opt}.txt`
+	wget --output-document=${update_opt}_tmp/${update_opt}.zip $URL
+	printf "Unpacking ${update_opt} to the temporary folder.\n"
+	unzip ${update_opt}_tmp/${update_opt}.zip -d ${update_opt}_tmp/ > /dev/null
+	printf "Copying ${update_opt}.jar into the server's plugins directory.\n"
+	cp ${update_opt}_tmp/*.jar $MC_DIR/plugins/
+	rm $MC_DIR/plugins/worldedit*
+	printf "Cleaning up the temporary directory.\n"
+	rm -r ${update_opt}_tmp/
+	printf "${update_opt} also has this thing called craftscripts, they're cool things that can automate certain tasks such as creation of pixel art and roofs.\n"
+	printf "Do you want the latest craftscripts to be installed? Y or N\nPrompt:"
+	read CRAFTSCRIPT_ANSWER
+	if [ "$CRAFTSCRIPT_ANSWER" = "Y" ] || [ "$CRAFTSCRIPT_ANSWER" = "y" ]; then
+		cp -r ${update_opt}_tmp/craftscripts/ $MC_DIR/
+		printf "Attempted to copy the craftscripts in.\n"
+	elif [ "$CRAFTSCRIPT_ANSWER" = "N" ] || [ "$CRAFTSCRIPT_ANSWER" = "n" ]; then
+		printf "You opted not to copy the craftscripts in.\n"
+	else
+		printf "You inputted something else. Assuming 'no'.\n"
+	fi
+	printf "Cleaning up the temporary directory.\n"
+	rm -r ${update_opt}_tmp/
+elif [ "$update_opt" = "Essentials" ]; then
+	printf "Making temporary directory.\n"
+	mkdir ~/${update_opt}_tmp/
+	printf "Downloading ${update_opt}.\n"
+	wget --output-document=~/${update_opt}_tmp/${update_opt}.zip http://tiny.cc/EssentialsZipDownload
+	printf "Unpacking ${update_opt} to the temporary folder.\n"
+	unzip ~/${update_opt}_tmp/${update_opt}.zip > /dev/null
+	printf "Copying ${update_opt}.jar and the rest into the server's plugins directory.\n"
+	cp ~/${update_opt}_tmp/*.jar $MC_DIR/plugins/
+	printf "Cleaning up the temporary directory.\n"
+	rm -r ~/${update_opt}_tmp/
+else
+	printf "Somehow update_opt was not set to anything useful but you got this far.\n"
+	exit 1
+fi
+}
 MENU_OPTIONS="Update Remove Check"
 select opt in $MENU_OPTIONS; do
 	if [ "$opt" = "Update" ]; then
 		UPDATE_OPTIONS="WorldGuard WorldEdit Essentials"
 		select update_opt in $UPDATE_OPTIONS; do
 			if [ "$update_opt" = "WorldGuard" ]; then
-				WEBSITE_VERSION=`lynx -dump http://irc.donclurd.com/worldguard-version.txt`
+				WEBSITE_VERSION=`lynx -dump http://irc.donclurd.com/${update_opt}.txt`
 				LOG_LINES=`cat $MC_DIR/server.log | grep 'WorldGuard' | grep 'enabled.' | wc -l`
 				SERVER_VERSION=`cat $MC_DIR/server.log | grep 'WorldGuard' | grep 'enabled.' | sed -n ${LOG_LINES}p | awk '{printf $5}'`
 					if [ "$SERVER_VERSION" = "$WEBSITE_VERSION" ]; then
-						printf "It appears your WorldGuard version, $SERVER_VERSION, is up to date with the response from the website, $WEBSITE_VERSION.\n"
+						printf "It appears your $update_opt version, $SERVER_VERSION, is up to date with the response from the website, $WEBSITE_VERSION.\n"
 					elif [ "$SERVER_VERSION" != "$WEBSITE_VERSION" ]; then
 						printf "Your version is out of date, latest version $WEBSITE_VERSION and your version $SERVER_VERSION.\n"
 						printf "If anything but two version numbers came out (e.g. asdf instead of 4.7) then interrupt the script via CTRL+C and attempt again.\n"
 						sleep 3
+						do_update
 						printf "The script will now attempt to intelligently determine the links to download. The way the links are formatted is such that they change from version to version.\n"
 						printf "This ensures the script works when a new version comes out. (As it should!)\n"
-						printf "Making temporary directory.\n"
-						mkdir worldguard_tmp/
-						printf "Downloading WorldGuard.\n"
-						URL=`lynx -dump http://irc.donclurd.com/worldguard-download.txt`
-						wget --output-document=worldguard_tmp/worldguard.zip $URL
-						printf "Unpacking WorldGuard to the temporary folder.\n"
-						unzip worldguard_tmp/worldguard.zip -d worldguard_tmp/ > /dev/null
-						printf "Copying WorldGuard.jar into the server's plugins directory.\n"
-						cp worldguard_tmp/WorldGuard.jar $MC_DIR/plugins/WorldGuard.jar
-						rm $MC_DIR/plugins/worldguard*
-						printf "Cleaning up the temporary directory.\n"
-						rm -r worldguard_tmp/
 						printf "Do you want to reload the server to attempt to upgrade now? Please answer Y or N.\nReload:"
 						read ANSWER
 						if [ "$ANSWER" = "Y" ] || [ "$ANSWER" = "y" ]; then
@@ -49,7 +94,7 @@ select opt in $MENU_OPTIONS; do
 						exit 0
 					fi
 			elif [ "$update_opt" = "WorldEdit" ]; then
-				WEBSITE_VERSION=`lynx -dump http://irc.donclurd.com/worldedit-version.txt`
+				WEBSITE_VERSION=`lynx -dump http://irc.donclurd.com/${update_opt}.txt`
 				LOG_LINES=`cat $MC_DIR/server.log | grep 'WorldEdit' | grep 'enabled.' | wc -l`
 				SERVER_VERSION=`cat $MC_DIR/server.log | grep 'WorldEdit' | grep 'enabled.' | sed -n ${LOG_LINES}p | awk '{printf $5}'`
 					if [ "$SERVER_VERSION" = "$WEBSITE_VERSION" ]; then
@@ -60,29 +105,7 @@ select opt in $MENU_OPTIONS; do
 						sleep 0.5
 						printf "The script will now attempt to 'intelligently' determine the links to download. The way the links are formatted is such that they change from version to version.\n"
 						printf "This ensures the script works when a new version comes out. (As it should!)\n"
-						URL=`lynx -dump http://irc.donclurd.com/worldedit-download.txt`
-						printf "Making temporary directory.\n"
-						mkdir worldedit_tmp/
-						printf "Downloading WorldEdit.\n"
-						wget --output-document=worldedit_tmp/worldedit.zip $URL
-						printf "Unpacking WorldEdit to the temporary folder.\n"
-						unzip worldedit_tmp/worldedit.zip -d worldedit_tmp/ > /dev/null
-						printf "Copying WorldEdit.jar into the server's plugins directory.\n"
-						cp worldedit_tmp/WorldEdit.jar $MC_DIR/plugins/WorldEdit.jar
-						rm $MC_DIR/plugins/worldedit*
-						printf "WorldEdit also has this thing called craftscripts, they're cool things that can automate certain tasks such as creation of pixel art and roofs.\n"
-						printf "Do you want the latest craftscripts to be installed? Y or N\nPrompt:"
-						read CRAFTSCRIPT_ANSWER
-						if [ "$CRAFTSCRIPT_ANSWER" = "Y" ] || [ "$CRAFTSCRIPT_ANSWER" = "y" ]; then
-							cp -r worldedit_tmp/craftscripts/ $MC_DIR/
-							printf "Attempted to copy the craftscripts in.\n"
-						elif [ "$CRAFTSCRIPT_ANSWER" = "N" ] || [ "$CRAFTSCRIPT_ANSWER" = "n" ]; then
-							printf "You opted not to copy the craftscripts in.\n"
-						else
-							printf "We did not understand what you wrote but will assume no.\n"
-						fi
-						printf "Cleaning up the temporary directory.\n"
-						rm -r worldedit_tmp/
+						do_update
 						printf "Do you want to reload the server to attempt to upgrade now? Please answer Y or N.\nReload:"
 						read ANSWER
 						if [ "$ANSWER" = "Y" ] || [ "$ANSWER" = "y" ]; then
@@ -101,7 +124,7 @@ select opt in $MENU_OPTIONS; do
 						exit 0
 					fi
 			elif [ "$update_opt" = "Essentials" ]; then
-				WEBSITE_VERSION=`lynx -dump http://irc.donclurd.com/essentials.txt`
+				WEBSITE_VERSION=`lynx -dump http://irc.donclurd.com/${update_opt}.txt`
 				LOG_LINES=`cat server.log | grep 'Loaded Essentials build' | wc -l`
 				SERVER_VERSION=`cat $MC_DIR/server.log | grep 'Loaded Essentials build' | sed -n ${LOG_LINES}p | awk '{printf $7}'`
 					if [ "$SERVER_VERSION" = "$WEBSITE_VERSION" ]; then
@@ -110,16 +133,7 @@ select opt in $MENU_OPTIONS; do
 						printf "It seems your Essentials installation is out of date. Current: $SERVER_VERSION New: $WEBSITE_VERSION\n"
 						printf "If anything but two version numbers came out (e.g. asdf instead of 2.6.4) then interrupt the script via CTRL+C and attempt again.\n"
 						sleep 0.5
-						printf "Making temporary directory.\n"
-						mkdir ~/essentials_tmp/
-						printf "Downloading Essentials.\n"
-						wget --output-document=~/essentials_tmp/essentials.zip http://tiny.cc/EssentialsZipDownload
-						printf "Unpacking Essentials to the temporary folder.\n"
-						unzip ~/essentials_tmp/essentials.zip > /dev/null
-						printf "Copying Essentials.jar and the rest into the server's plugins directory.\n"
-						cp ~/essentials_tmp/*.jar $MC_DIR/plugins/
-						printf "Cleaning up the temporary directory.\n"
-						rm -r ~/essentials_tmp/
+
 						printf "Do you want to reload the server to attempt to upgrade now? Please answer Y or N.\nReload:"
 						read ANSWER
 						if [ "$ANSWER" = "Y" || "$ANSWER" = "y" ]; then
